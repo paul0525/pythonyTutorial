@@ -5,27 +5,26 @@ import xlwt
 
 from LogRecord import LogRecord
 
-def generateLogRecord( beginLine, endLine):
-     fileName = beginLine.split(":")[0]
-     beginTime = beginLine.split("\x9a")[-1].replace("\n","")
-     endTime = endLine.split("\x9a")[-1].replace("\n","")
+def generateLogRecord( beginLine):
+     line = beginLine.split(",")
+     beginTime = line[0].split(":")[-1].replace("\n","")
+     endTime = line[1].split(":")[-1].replace("\n","")
+     fileName = line[2].split(":")[-1].replace("\n","")
      return LogRecord(fileName, beginTime, endTime)
 
-f = open('e:/chanelTime_direct_result.log')
+f = open('e:/temp.log')
 records=[]
 beginLine = f.readline()
-endLine = f.readline()
 while beginLine:
-     records.append(generateLogRecord(beginLine, endLine))
+     records.append(generateLogRecord(beginLine))
      beginLine = f.readline()
-     endLine = f.readline()
 f.close
 
 #Ð´³Éexcel
 workbook=xlwt.Workbook()
 worksheet=workbook.add_sheet("sheet1",cell_overwrite_ok=True)
 
-worksheet.write(0,0,'fileName')
+worksheet.write(0,0,'applyId')
 worksheet.write(0,1,'beginTime')
 worksheet.write(0,2,'endTime')
 worksheet.write(0,3,'diff')
@@ -39,7 +38,7 @@ for record in records:
      worksheet.write(i,3, label=diff)
      i += 1
 
-workbook.save("e:\chanelTime_direct_result.xls")
+workbook.save("e:/temp_result.xls")
 print 'end operated'
 
 
